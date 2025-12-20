@@ -1,0 +1,63 @@
+---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import type { DropMenuItem } from '@/types/drop-menu-item';
+import { Icon } from 'astro-icon/components';
+
+type Props = {
+  title: string;
+  items: DropMenuItem[];
+  rootPath: string;
+}
+
+const { title, items, rootPath } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+/**
+ * Función para limpiar el href y asegurar que no haya dobles barras
+ * @param itemHref - El href del ítem del menú
+ */ 
+const formatHref = (itemHref: string) => {
+  const cleanRootPath = rootPath.startsWith('/') ? rootPath.slice(1) : rootPath;
+  const cleanHref = itemHref.startsWith('/') ? itemHref.slice(1) : itemHref;
+  return `/${lang}/${cleanRootPath}/${cleanHref}`;
+};
+---
+
+<div class="group relative flex items-center">
+  <button
+    type="button"
+    class="flex items-center gap-1 py-1 text-mono-dark dark:text-mono-light transition-all hover:text-accent group-hover:text-accent border-b-2 border-transparent group-hover:border-accent font-medium cursor-default"
+  >
+    {title}
+    <Icon 
+      name="heroicons:chevron-down" 
+      class="h-4 w-4 transition-transform group-hover:rotate-180" 
+    />
+  </button>
+
+  <div
+    class="invisible absolute -left-4 top-full z-50 mt-2 w-[400px] origin-top-left rounded-xl border border-mono-lighter bg-white p-4 shadow-2xl opacity-0 transition-all group-hover:visible group-hover:opacity-100 dark:border-mono-dark dark:bg-mono-black"
+  >
+    <div class="grid grid-cols-1 gap-2">
+      {items.map((item) => (
+        <a
+          href={formatHref(item.href)}
+          class="group/item flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-mono-lighter dark:hover:bg-mono-dark"
+        >
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-mono-lighter group-hover/item:bg-white dark:bg-mono-dark dark:group-hover/item:bg-mono-black transition-colors">
+            <Icon name="heroicons:bolt" class="h-5 w-5 text-mono-dark dark:text-mono-light" />
+          </div>
+          <div>
+            <div class="text-sm font-bold text-mono-black dark:text-white">
+              {item.title}
+            </div>
+            <p class="text-xs text-mono-gray dark:text-mono-light">
+              {t(item.descriptionTranslationKey)}
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 export type DropMenuItem = {
     title: string;
-    description: string;
+    descriptionTranslationKey: string;
     href: string;
+    categoryTranslationKey?: string;
     iconUrl?: string;
-    category?: string;
 };

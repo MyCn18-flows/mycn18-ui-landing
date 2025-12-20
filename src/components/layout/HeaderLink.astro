@@ -1,23 +1,30 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
+import { getLangFromUrl } from '@/i18n/utils';
 
 type Props = HTMLAttributes<'a'>;
 
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const subpath = pathname.match(/[^/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+const lang = getLangFromUrl(Astro.url);
+
+const pathname = Astro.url.pathname;
+// Lógica para detectar si el enlace está activo considerando el idioma
+const isActive = href === pathname || 
+                 href === pathname.replace(/\/$/, '') ||
+                 (href !== `/${lang}` && pathname.startsWith(String(href)));
 ---
 
 <a 
     href={href} 
     class:list={[
         className, 
-        'inline-block no-underline border-b-2 transition-all duration-300',
-        'border-transparent hover:border-nitrogen-red',
-        { 'border-oxygen-blue font-bold': isActive }
+        'inline-block no-underline border-b-2 transition-all duration-300 py-1',
+        // Estado normal
+        'border-transparent text-mono-gray hover:text-accent hover:border-accent',
+        // Estado activo
+        { 'border-accent text-mono-black font-bold dark:text-white': isActive }
     ]} 
     {...props}
 >
-	<slot />
+    <slot />
 </a>

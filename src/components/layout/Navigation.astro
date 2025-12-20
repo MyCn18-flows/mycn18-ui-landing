@@ -1,60 +1,103 @@
 ---
-import { siteConfig } from '@/config.ts';
+import { NAVIGATION_CONFIG } from '@/config/navigation';
+import { SITE_CONFIG } from '@/config/site';
+import { useTranslations, getLangFromUrl } from '@/i18n/utils';
+import HeaderLink from './HeaderLink.astro';
+import HeaderDropMenu from './HeaderDropMenu.astro';
+import ThemeSelector from './settings/ThemeSelector.astro';
+import LanguageSelector from './settings/LanguageSelector.astro';
 import { Icon } from 'astro-icon/components';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const ctaConfig = {
+  href: `/${lang}/${NAVIGATION_CONFIG.cta.href}`,
+  label: t(NAVIGATION_CONFIG.cta.translationKey)
+};
+
+const loginConfig = {
+  href: NAVIGATION_CONFIG.login.href,
+  label: t(NAVIGATION_CONFIG.login.translationKey)
+};
 ---
 
-<nav
-  class="border-mono-lighter fixed top-0 z-50 w-full border-b bg-white/95 backdrop-blur-sm"
->
+<nav class="border-mono-lighter fixed top-0 z-50 w-full border-b bg-white/95 backdrop-blur-sm dark:border-mono-dark dark:bg-mono-black/95">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 items-center justify-between">
-      <div class="flex items-center">
-        <a href="/" class="text-mono-black text-xl font-bold"
-          >{siteConfig.site.name}</a
-        >
-      </div>
+      
+      <a href={`/${lang}`} class="text-mono-black text-xl font-bold dark:text-white">
+        {SITE_CONFIG.name}<span class="text-accent">.</span>
+      </a>
 
-      <div class="hidden items-center space-x-8 md:flex">
-        {
-          siteConfig.navigation.links.map((link) => (
-            <a href={link.href} class="text-mono-dark">
-              {link.name}
-            </a>
-          ))
-        }
-        <a
-          href={siteConfig.navigation.cta.href}
-          class="bg-mono-black rounded-lg px-6 py-2 text-white"
-        >
-          {siteConfig.navigation.cta.text}
+      <div class="hidden items-center space-x-6 md:flex">
+        {NAVIGATION_CONFIG.links.map((link) => (
+          link.drop ? (
+            <HeaderDropMenu 
+              title={t(link.translationKey)} 
+              items={link.items || []}
+              rootPath={link.href}
+            />
+          ) : (
+            <HeaderLink href={`/${lang}/${link.href}`}>
+              {t(link.translationKey)}
+            </HeaderLink>
+          )
+        ))}
+        
+        <div class="h-6 w-px bg-mono-lighter dark:bg-mono-dark mx-2"></div>
+        
+        <LanguageSelector />
+        <ThemeSelector />
+        
+        <a href={loginConfig.href} class="text-sm font-medium text-mono-dark hover:text-mono-black dark:text-mono-light dark:hover:text-white transition-colors">
+          {loginConfig.label}
+        </a>
+
+        <a href={ctaConfig.href} class="bg-mono-black rounded-lg px-5 py-2 text-sm font-medium text-white transition-all hover:scale-105 active:scale-95 dark:bg-white dark:text-mono-black shadow-sm">
+          {ctaConfig.label}
         </a>
       </div>
 
-      <button
-        id="mobileMenuButton"
-        class="rounded-lg p-2 md:hidden"
-        aria-controls="mobileMenu"
-        aria-expanded="false"
-        aria-label="Toggle navigation menu"
-      >
-        <Icon name="heroicons:bars-3" class="text-mono-black h-6 w-6" />
-      </button>
+      <div class="flex items-center gap-4 md:hidden">
+        <ThemeSelector />
+        <button id="mobileMenuButton" class="text-mono-black dark:text-white p-2" aria-expanded="false" aria-controls="mobileMenu">
+          <Icon name="heroicons:bars-3" class="h-6 w-6" />
+        </button>
+      </div>
     </div>
+  </div>
 
-    <div id="mobileMenu" class="hidden pb-4 md:hidden" aria-hidden="true">
-      <div class="flex flex-col space-y-3">
-        {
-          siteConfig.navigation.links.map((link) => (
-            <a href={link.href} class="text-mono-dark py-2">
-              {link.name}
-            </a>
-          ))
-        }
-        <a
-          href={siteConfig.navigation.cta.href}
-          class="bg-mono-black rounded-lg px-6 py-3 text-center text-white"
-        >
-          {siteConfig.navigation.cta.text}
+  <div id="mobileMenu" class="hidden border-t border-mono-lighter bg-white px-4 py-6 dark:border-mono-dark dark:bg-mono-black md:hidden">
+    <div class="flex flex-col space-y-4">
+      {NAVIGATION_CONFIG.links.map((link) => (
+        <div>
+          <div class="text-lg font-bold text-mono-black dark:text-white py-2">
+            {t(link.translationKey)}
+          </div>
+          {link.drop && (
+            <div class="ml-4 mt-1 flex flex-col space-y-3 border-l-2 border-mono-lighter pl-4 dark:border-mono-dark">
+              {link.items?.map((item) => (
+                <a href={`/${lang}${item.href}`} class="text-sm text-mono-dark dark:text-mono-light hover:text-accent">
+                  {t(item.title)}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+      
+      <hr class="border-mono-lighter dark:border-mono-dark" />
+      
+      <div class="flex flex-col gap-4 py-2">
+        <div class="flex justify-between items-center">
+             <LanguageSelector />
+             <a href={loginConfig.href} class="font-medium text-mono-dark dark:text-mono-light underline underline-offset-4">
+                {loginConfig.label}
+             </a>
+        </div>
+        <a href={ctaConfig.href} class="bg-accent rounded-lg px-6 py-3 text-center text-white font-bold shadow-lg">
+           {ctaConfig.label}
         </a>
       </div>
     </div>
@@ -62,27 +105,17 @@ import { Icon } from 'astro-icon/components';
 </nav>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  const initMenu = () => {
     const mobileMenuButton = document.getElementById('mobileMenuButton');
     const mobileMenu = document.getElementById('mobileMenu');
-
     if (mobileMenuButton && mobileMenu) {
       mobileMenuButton.addEventListener('click', () => {
-        const isExpanded =
-          mobileMenuButton.getAttribute('aria-expanded') === 'true';
+        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
         mobileMenuButton.setAttribute('aria-expanded', String(!isExpanded));
-        mobileMenu.setAttribute('aria-hidden', String(isExpanded));
         mobileMenu.classList.toggle('hidden');
       });
-
-      const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-      mobileMenuLinks.forEach((link) => {
-        link.addEventListener('click', () => {
-          mobileMenuButton.setAttribute('aria-expanded', 'false');
-          mobileMenu.setAttribute('aria-hidden', 'true');
-          mobileMenu.classList.add('hidden');
-        });
-      });
     }
-  });
+  };
+  document.addEventListener('astro:page-load', initMenu);
+  initMenu();
 </script>

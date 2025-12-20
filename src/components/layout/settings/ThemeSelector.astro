@@ -1,0 +1,73 @@
+---
+
+---
+
+<button
+  id="theme-selector"
+  aria-label="Alternar tema"
+  class="relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-mono-lighter bg-white text-mono-black transition-all hover:bg-mono-lighter dark:border-mono-dark dark:bg-mono-darker dark:text-mono-white dark:hover:bg-mono-dark"
+>
+  <svg
+    id="sun-icon"
+    class="h-5 w-5 block dark:hidden"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="5"></circle>
+    <line x1="12" y1="1" x2="12" y2="3"></line>
+    <line x1="12" y1="21" x2="12" y2="23"></line>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+    <line x1="1" y1="12" x2="3" y2="12"></line>
+    <line x1="21" y1="12" x2="23" y2="12"></line>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  </svg>
+
+  <svg
+    id="moon-icon"
+    class="h-5 w-5 hidden dark:block"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+</button>
+
+<script is:inline>
+  const updateTheme = () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    // 1. Atributo para CSS
+    document.documentElement.setAttribute('data-theme', newTheme);
+    
+    // 2. Clase para Tailwind
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
+    // 3. Persistencia
+    localStorage.setItem('theme', newTheme);
+  };
+
+  // Escuchamos el click
+  document.getElementById('theme-selector')?.addEventListener('click', updateTheme);
+
+  // Soporte para Astro View Transitions (si cambias de página)
+  document.addEventListener('astro:after-swap', () => {
+    const theme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+  });
+</script>

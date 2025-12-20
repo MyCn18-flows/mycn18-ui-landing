@@ -1,44 +1,71 @@
 ---
-import HeaderLink from '../layout/HeaderLink.astro';
-import { BASE_URL } from '../../consts';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import HeaderLink from '../HeaderLink.astro';
+import { Icon } from 'astro-icon/components';
 
-interface Props {
-	path: string;
-}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { pathname } = Astro.url;
 
-const { path } = Astro.props;
+// 1. Se limpia el path eliminando el prefijo del idioma y barras finales
+const pathWithoutLang = pathname.replace(new RegExp(`^/${lang}/?`), '').replace(/\/$/, '');
 
-const cleanPath = path.startsWith(BASE_URL)
-? path.substring(BASE_URL.length)
-: path;
+// 2. Se divide en segmentos
+const segments = pathWithoutLang.split('/').filter(segment => segment !== '');
 
-const segments = cleanPath.split('/').filter(segment => segment !== '');
-
-let currentPath = '';
+// 3. Se construyen los breadcrumbs
+let currentPath = `/${lang}`;
 const breadcrumbs = segments.map((segment, index) => {
-	currentPath += `/${segment}`;
-	const isLast = index === segments.length - 1;
-	return {
-		href: currentPath,
-		label: segment.charAt(0).toUpperCase() + segment.slice(1),
-		isLast: isLast
-	};
+    currentPath += `/${segment}`;
+    const isLast = index === segments.length - 1;
+    
+    // Se formatea el texto: de "ai-agents" a "Ai agents"
+    const label = segment
+        .replace(/-/g, ' ')
+        .charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+
+    return {
+        href: currentPath,
+        label: label,
+        isLast: isLast
+    };
 });
 ---
-<nav class="py-4 bg-guide-light dark:bg-cosmic-void text-sm" aria-label="Breadcrumb">
-	<ol class="flex list-none m-0 p-0 flex-wrap justify-center max-w-7xl mx-auto px-4">
-		<li class="flex items-center">
-			<HeaderLink href="/" class="text-sm">Inicio</HeaderLink>
-		</li>
-		{breadcrumbs.map((crumb) => (
-			<li class="flex items-center">
-				<span aria-hidden="true" class="mx-2">/</span>
-				{crumb.isLast ? (
-					<span aria-current="page" class="text-nitrogen-red font-semibold">{crumb.label}</span>
-				) : (
-					<HeaderLink href={crumb.href} class="text-sm">{crumb.label}</HeaderLink>
-				)}
-			</li>
-		))}
-	</ol>
+
+<nav 
+    class="bg-white/50 py-4 backdrop-blur-sm dark:bg-mono-black/50 border-b border-mono-lighter dark:border-mono-dark" 
+    aria-label="Breadcrumb"
+>
+    <ol class="mx-auto flex max-w-7xl list-none items-center justify-start px-4 text-sm sm:px-6 lg:px-8">
+        <li class="flex items-center">
+            <HeaderLink href={`/${lang}`} class="text-mono-gray hover:text-accent transition-colors">
+                <Icon name="heroicons:home" class="h-4 w-4" />
+                <span class="sr-only">Home</span>
+            </HeaderLink>
+        </li>
+
+        {breadcrumbs.map((crumb) => (
+            <li class="flex items-center">
+                <Icon 
+                    name="heroicons:chevron-right" 
+                    class="mx-2 h-4 w-4 text-mono-light dark:text-mono-gray" 
+                />
+                {crumb.isLast ? (
+                    <span 
+                        aria-current="page" 
+                        class="font-bold text-accent"
+                    >
+                        {crumb.label}
+                    </span>
+                ) : (
+                    <HeaderLink 
+                        href={crumb.href} 
+                        class="text-mono-gray hover:text-accent"
+                    >
+                        {crumb.label}
+                    </HeaderLink>
+                )}
+            </li>
+        ))}
+    </ol>
 </nav>
