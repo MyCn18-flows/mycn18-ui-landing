@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from '@/config.ts';
+import { LAYOUT_CONFIG } from "@/config/layout"
 ---
 
 <section
@@ -13,28 +13,28 @@ import { siteConfig } from '@/config.ts';
       <h1
         class="text-mono-black scroll-fade-up mb-6 text-5xl leading-tight font-extrabold sm:text-6xl lg:text-7xl"
       >
-        {siteConfig.hero.headline}<br />
-        <span class="text-mono-darker">{siteConfig.hero.subheadline}</span>
+        {LAYOUT_CONFIG.hero.headline}<br />
+        <span class="text-mono-darker">{LAYOUT_CONFIG.hero.subheadline}</span>
       </h1>
       <p
         class="text-mono-dark scroll-fade-up mb-10 text-xl leading-relaxed sm:text-2xl"
       >
-        {siteConfig.hero.description}
+        {LAYOUT_CONFIG.hero.description}
       </p>
       <div
         class="scroll-fade-up mb-16 flex flex-col justify-center gap-4 sm:flex-row"
       >
         <a
-          href={siteConfig.hero.cta.primary.href}
+          href={LAYOUT_CONFIG.hero.cta.primary.href}
           class="bg-mono-black rounded-lg px-8 py-4 font-semibold text-white shadow-lg"
         >
-          {siteConfig.hero.cta.primary.text}
+          {LAYOUT_CONFIG.hero.cta.primary.text}
         </a>
         <a
-          href={siteConfig.hero.cta.secondary.href}
+          href={LAYOUT_CONFIG.hero.cta.secondary.href}
           class="border-mono-black text-mono-black rounded-lg border-2 bg-white px-8 py-4 font-semibold"
         >
-          {siteConfig.hero.cta.secondary.text}
+          {LAYOUT_CONFIG.hero.cta.secondary.text}
         </a>
       </div>
 
@@ -42,7 +42,7 @@ import { siteConfig } from '@/config.ts';
         class="border-mono-lighter mx-auto grid max-w-3xl grid-cols-3 gap-8 border-t pt-20"
       >
         {
-          siteConfig.hero.stats.map((stat, index) => (
+          LAYOUT_CONFIG.hero.stats.map((stat, index) => (
             <div class={`float scroll-fade-up stagger-${index + 1}`}>
               <div class="text-mono-black mb-2 text-4xl font-bold">
                 {stat.value}

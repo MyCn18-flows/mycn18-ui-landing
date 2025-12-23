@@ -1,7 +1,12 @@
 ---
-import { siteConfig } from '@/config.ts';
+import type { HowItWorksConfig } from '@/types/how-it-works-config';
 import { Icon } from 'astro-icon/components';
-import { howItWorksSteps } from '@/content/how-it-works';
+
+type Props = {
+	howItWorksConfig: HowItWorksConfig;
+};
+
+const { howItWorksConfig } = Astro.props;
 ---
 
 <section
@@ -20,29 +25,29 @@ import { howItWorksSteps } from '@/content/how-it-works';
   <div class="mx-auto max-w-7xl">
     <div class="scroll-fade-down mx-auto mb-16 max-w-3xl text-center">
       <h2 class="text-mono-black mb-4 text-4xl font-bold sm:text-5xl">
-        {siteConfig.howItWorks.title}
+        {howItWorksConfig.title}
       </h2>
       <p class="text-mono-dark text-xl">
-        {siteConfig.howItWorks.subtitle}
+        {howItWorksConfig.subtitle}
       </p>
     </div>
 
     <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
       {
-        howItWorksSteps.map((step, index) => (
+        howItWorksConfig.steps.map((step, index) => (
           <div class="relative">
             <div
               class={`scroll-fade-${index % 2 === 0 ? 'left' : 'right'} border-mono-lighter rounded-xl border bg-white p-8 stagger-${index + 1}`}
             >
               <div class="bg-mono-black mb-6 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold text-white">
-                {step.number}
+                {index + 1}
               </div>
               <h3 class="text-mono-black mb-3 text-xl font-semibold">
                 {step.title}
               </h3>
               <p class="text-mono-dark">{step.description}</p>
             </div>
-            {index < howItWorksSteps.length - 1 && (
+            {index < howItWorksConfig.steps.length - 1 && (
               <div class="absolute top-1/2 -right-4 hidden -translate-y-1/2 transform lg:block">
                 <Icon
                   name="heroicons:chevron-right"

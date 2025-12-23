@@ -1,6 +1,12 @@
 ---
-import { siteConfig } from '@/config.ts';
+import { contactConfig } from '@/config/contact';
 import { Icon } from 'astro-icon/components';
+
+type Props = {
+  config?: typeof contactConfig;
+}
+
+const { config = contactConfig } = Astro.props;
 ---
 
 <section id="contact" class="bg-mono-lighter px-4 py-20 sm:px-6 lg:px-8">
@@ -8,15 +14,15 @@ import { Icon } from 'astro-icon/components';
     <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
       <div class="scroll-fade-left">
         <h2 class="text-mono-black mb-6 text-4xl font-bold sm:text-5xl">
-          {siteConfig.contact.title}
+          {config.title}
         </h2>
         <p class="text-mono-dark mb-8 text-xl leading-relaxed">
-          {siteConfig.contact.subtitle}
+          {config.subtitle}
         </p>
 
         <ul class="mb-8 space-y-4">
           {
-            siteConfig.contact.benefits.map((benefit) => (
+            config.benefits.map((benefit) => (
               <li class="flex items-center">
                 <Icon
                   name="heroicons:check"
@@ -33,83 +39,52 @@ import { Icon } from 'astro-icon/components';
             Questions? Reach out to our team:
           </p>
           <a
-            href={`mailto:${siteConfig.contact.email}`}
-            class="text-mono-black font-semibold">{siteConfig.contact.email}</a
+            href={`mailto:${config.email}`}
+            class="text-mono-black font-semibold">{config.email}</a
           >
         </div>
       </div>
 
-      <div
-        class="scroll-fade-right border-mono-lighter rounded-xl border bg-white p-8 shadow-lg"
-      >
+      <div class="scroll-fade-right border-mono-lighter rounded-xl border bg-white p-8 shadow-lg">
         <form id="contactForm" class="space-y-6">
-          <div>
-            <label
-              for="name"
-              class="text-mono-black mb-2 block text-sm font-semibold"
-              >{siteConfig.contact.form.fields.name.label}</label
-            >
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required={siteConfig.contact.form.fields.name.required}
-              class="border-mono-lighter w-full rounded-lg border px-4 py-3"
-              placeholder={siteConfig.contact.form.fields.name.placeholder}
-            />
-          </div>
-
-          <div>
-            <label
-              for="email"
-              class="text-mono-black mb-2 block text-sm font-semibold"
-              >{siteConfig.contact.form.fields.email.label}</label
-            >
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required={siteConfig.contact.form.fields.email.required}
-              class="border-mono-lighter w-full rounded-lg border px-4 py-3"
-              placeholder={siteConfig.contact.form.fields.email.placeholder}
-            />
-          </div>
-
-          <div>
-            <label
-              for="company"
-              class="text-mono-black mb-2 block text-sm font-semibold"
-              >{siteConfig.contact.form.fields.company.label}</label
-            >
-            <input
-              type="text"
-              id="company"
-              name="company"
-              class="border-mono-lighter w-full rounded-lg border px-4 py-3"
-              placeholder={siteConfig.contact.form.fields.company.placeholder}
-            />
-          </div>
-
-          <div>
-            <label
-              for="message"
-              class="text-mono-black mb-2 block text-sm font-semibold"
-              >{siteConfig.contact.form.fields.message.label}</label
-            >
-            <textarea
-              id="message"
-              name="message"
-              rows="4"
-              class="form-input border-mono-lighter w-full resize-none rounded-lg border px-4 py-3"
-              placeholder={siteConfig.contact.form.fields.message.placeholder}
-            ></textarea>
-          </div>
+          {
+            config.form.fields.map((field) => (
+              <div>
+                <label
+                  for={field.title.toLowerCase()}
+                  class="text-mono-black mb-2 block text-sm font-semibold"
+                >
+                  {field.label}
+                </label>
+                
+                {field.title === 'Message' ? (
+                  <textarea
+                    id={field.title.toLowerCase()}
+                    name={field.title.toLowerCase()}
+                    rows="4"
+                    required={field.required}
+                    placeholder={field.placeholder}
+                    class="form-input border-mono-lighter w-full resize-none rounded-lg border px-4 py-3"
+                  ></textarea>
+                ) : (
+                  <input
+                    type={field.title === 'Email' ? 'email' : 'text'}
+                    id={field.title.toLowerCase()}
+                    name={field.title.toLowerCase()}
+                    required={field.required}
+                    placeholder={field.placeholder}
+                    class="border-mono-lighter w-full rounded-lg border px-4 py-3"
+                  />
+                )}
+              </div>
+            ))
+          }
 
           <button
             type="submit"
-            class="bg-mono-black w-full rounded-lg px-6 py-4 font-semibold text-white shadow-lg"
+            class="bg-mono-black w-full rounded-lg px-6 py-4 font-semibold text-white shadow-lg transition-transform hover:scale-[1.02]"
           >
-            {siteConfig.contact.form.cta}
+            {config.form.cta}
           </button>
 
           <p class="text-mono-gray text-center text-xs leading-relaxed">
@@ -124,14 +99,21 @@ import { Icon } from 'astro-icon/components';
 </section>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const contactForm = document.getElementById('contactForm');
+  const setupForm = () => {
+    const contactForm = document.getElementById('contactForm') as HTMLFormElement | null;
+    
     if (contactForm) {
       contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        
         alert('Thank you for your message! We will get back to you soon.');
+        
         contactForm.reset();
       });
     }
-  });
+  };
+
+  setupForm();
+  
+  document.addEventListener('astro:after-swap', setupForm);
 </script>

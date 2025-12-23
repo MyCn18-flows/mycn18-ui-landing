@@ -1,6 +1,3 @@
-export const SITE_TITLE = 'MyCn18: Servicios de Arquitectura y Consultoría';
-export const SITE_DESCRIPTION = 'Implementa MyCn18 a la medida de tu negocio con la guía experta de su arquitecto principal. Flujos sólidos, estables y escalables garantizados.';
-
 export const SOCIAL_LINKS = [
 	{ 
 		name: 'GitHub', 

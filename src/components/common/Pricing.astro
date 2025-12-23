@@ -1,6 +1,12 @@
 ---
-import { siteConfig } from '@/config.ts';
 import { Icon } from 'astro-icon/components';
+import type { PricingPlansConfig } from '@/types/pricing-plans-config';
+
+type Props = {
+	pricingConfig: PricingPlansConfig;
+};
+
+const { pricingConfig } = Astro.props;
 ---
 
 <section
@@ -10,16 +16,16 @@ import { Icon } from 'astro-icon/components';
   <div class="mx-auto max-w-7xl">
     <div class="scroll-fade-up mx-auto mb-16 max-w-3xl text-center">
       <h2 class="text-mono-black mb-4 text-4xl font-bold sm:text-5xl">
-        {siteConfig.pricing.title}
+        {pricingConfig.title}
       </h2>
       <p class="text-mono-dark text-xl">
-        {siteConfig.pricing.subtitle}
+        {pricingConfig.subtitle}
       </p>
     </div>
 
     <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
       {
-        siteConfig.pricing.plans.map((plan, index) =>
+        pricingConfig.plans.map((plan, index) =>
           plan.featured ? (
             <div class="scroll-fade-up border-mono-black scale-105 transform rounded-xl border-4 p-8 shadow-2xl">
               <div class="bg-mono-black rounded-xl p-8">

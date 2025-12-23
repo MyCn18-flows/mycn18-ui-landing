@@ -1,23 +1,29 @@
 ---
-import { siteConfig } from '@/config.ts';
+import type { FAQConfig } from '@/types/faq-config';
 import { Icon } from 'astro-icon/components';
-import { faqItems } from '@/content/faq';
+
+type Props = {
+	faqConfig: FAQConfig;
+}
+
+const { faqConfig } = Astro.props;
+
 ---
 
 <section id="faq" class="relative bg-white px-4 py-20 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-4xl">
     <div class="scroll-fade-up mb-16 text-center">
       <h2 class="text-mono-black mb-4 text-4xl font-bold sm:text-5xl">
-        {siteConfig.faq.title}
+        {faqConfig.title}
       </h2>
       <p class="text-mono-dark text-xl">
-        {siteConfig.faq.subtitle}
+        {faqConfig.subtitle}
       </p>
     </div>
 
     <div class="space-y-4">
       {
-        faqItems.map((item, index) => (
+        faqConfig.items.map((item, index) => (
           <div
             class={`scroll-fade-up border-mono-lighter rounded-lg border stagger-${(index % 9) + 1}`}
           >
@@ -30,7 +36,7 @@ import { faqItems } from '@/content/faq';
               </span>
               <Icon
                 name="heroicons:chevron-down"
-                class="faq-icon text-mono-gray h-5 w-5 flex-shrink-0"
+                class="faq-icon text-mono-gray h-5 w-5 shrink-0"
               />
             </button>
             <div class="faq-content text-mono-dark px-6 leading-relaxed">

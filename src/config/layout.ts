@@ -1,3 +1,5 @@
+import type { IconName } from "@/types/icon-name";
+
 export const LAYOUT_CONFIG = {
     hero: {
     headline: 'Intelligent AI Agents',
@@ -61,7 +63,11 @@ export const LAYOUT_CONFIG = {
       { name: 'GitHub', href: '#', icon: 'github' },
       { name: 'Dribbble', href: '#', icon: 'dribbble' },
       { name: 'LinkedIn', href: '#', icon: 'linkedin' },
-    ],
+    ] as {
+      name: string;
+      href: string;
+      icon: IconName;
+    }[],
     copyright: `${new Date().getFullYear()} AI Agent Platform. All rights reserved.`,
   },
 }
