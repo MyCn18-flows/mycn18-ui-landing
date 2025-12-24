@@ -1,64 +1,48 @@
 ---
 import type { FAQConfig } from '@/types/faq-config';
-import { Icon } from 'astro-icon/components';
+import AnimatedList from '@/components/islands/AnimatedList';
 
 type Props = {
-	faqConfig: FAQConfig;
+  faqConfig: FAQConfig;
 }
 
 const { faqConfig } = Astro.props;
 
+// Formateamos los items para que se vean bien en la lista
+const faqItems = faqConfig.items.map(item => `${item.question} — ${item.answer}`);
 ---
 
-<section id="faq" class="relative bg-white px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-4xl">
+<section id="faq" class="relative bg-app text-main px-4 py-20 sm:px-6 lg:px-8 border-t border-main/20">
+  <div class="mx-auto max-w-5xl">
     <div class="scroll-fade-up mb-16 text-center">
-      <h2 class="text-mono-black mb-4 text-4xl font-bold sm:text-5xl">
+      <h2 class="text-main mb-4 text-4xl font-bold sm:text-5xl tracking-tight">
         {faqConfig.title}
       </h2>
-      <p class="text-mono-dark text-xl">
+      <p class="opacity-70 text-xl max-w-2xl mx-auto">
         {faqConfig.subtitle}
       </p>
     </div>
 
-    <div class="space-y-4">
-      {
-        faqConfig.items.map((item, index) => (
-          <div
-            class={`scroll-fade-up border-mono-lighter rounded-lg border stagger-${(index % 9) + 1}`}
-          >
-            <button
-              class="faq-button flex w-full items-center justify-between px-6 py-5 text-left"
-              aria-expanded="false"
-            >
-              <span class="text-mono-black pr-8 font-semibold">
-                {item.question}
-              </span>
-              <Icon
-                name="heroicons:chevron-down"
-                class="faq-icon text-mono-gray h-5 w-5 shrink-0"
-              />
-            </button>
-            <div class="faq-content text-mono-dark px-6 leading-relaxed">
-              {item.answer}
-            </div>
-          </div>
-        ))
-      }
+    <div class="w-full flex justify-center">
+      <AnimatedList 
+        client:visible 
+        items={faqItems} 
+        showGradients={true} 
+        displayScrollbar={false} 
+        className="max-w-3xl"
+        itemClassName="shadow-sm" 
+      />
     </div>
   </div>
 </section>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const faqButtons = document.querySelectorAll('.faq-button');
-    faqButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const content = button.nextElementSibling;
-        const isExpanded = button.getAttribute('aria-expanded') === 'true';
-        button.setAttribute('aria-expanded', String(!isExpanded));
-        content?.classList.toggle('active');
-      });
-    });
-  });
-</script>
+<style is:global>
+  /* Aseguramos que el contenedor de la lista no tenga scrollbars molestos en móviles */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>

@@ -1,4 +1,22 @@
 ---
+import { CANVACN18_FULL_CONFIG } from '@/config/products/canvacn18/config';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
+import Features from '@/components/common/Features.astro';
+import HowItWorks from '@/components/common/HowItWorks.astro';
+import Pricing from '@/components/common/Pricing.astro';
+import FAQ from '@/components/common/FAQ.astro';
+import FutureNews from '@/components/common/FutureNews.astro';
+
+const config = CANVACN18_FULL_CONFIG;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
-<div>asdadasd</div>
+
+<div class="w-full bg-app text-main">
+  <Features featuresConfig={config.features} />
+  <HowItWorks howItWorksConfig={config.howItWorks} t={t} />
+  <Pricing pricingConfig={config.pricing} />
+  <FAQ faqConfig={config.faq} />
+  <FutureNews futureNewsConfig={config.news} />
+</div>

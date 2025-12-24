@@ -1,7 +1,11 @@
 {
+    "common": {
+        "previous": "Anterior",
+        "next": "Siguiente"
+    },
     "site": {
         "title": "MyCn18 Inicio",
-        "description": "Soluciones de última generación para ingeniería moderna"
+        "description": "Create your flow, unchained, at any level."
     },
     "layout": {
         "header": {
@@ -45,6 +49,7 @@
             "tagline": "Construyendo el futuro de la ingeniería moderna.",
             "copyright": "Todos los derechos reservados.",
             "columns": {
+                "product": "Productos",
                 "company": "Empresa",
                 "support": "Soporte",
                 "legal": "Legal"

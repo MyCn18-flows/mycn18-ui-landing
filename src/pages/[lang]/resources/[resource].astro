@@ -1,23 +1,33 @@
 ---
-import Forum from "@/components/resources/Forum.astro"
-import Blog from "@/components/resources/Blog.astro"
-import Changelog from "@/components/resources/Changelog.astro"
-import Collaborate from "@/components/resources/Collaborate.astro"
-import Documentation from "@/components/resources/Documentation.astro"
-import FirstSteps from "@/components/resources/FirstSteps.astro"
-import GetProduct from "@/components/resources/GetProduct.astro"
+import MainLayout from '@/layouts/MainLayout.astro';
+import Forum from "@/components/resources/Forum.astro";
+import Blog from "@/components/resources/Blog.astro";
+import Changelog from "@/components/resources/Changelog.astro";
+import Collaborate from "@/components/resources/Collaborate.astro";
+import Documentation from "@/components/resources/Documentation.astro";
+import FirstSteps from "@/components/resources/FirstSteps.astro";
+import GetProduct from "@/components/resources/GetProduct.astro";
 
-const resourceMap: Record<string, HTMLElement> = {
-    'blog': <Blog />,
-    'changelog': <Changelog />,
-    'collaborate': <Collaborate />,
-    'docs': <Documentation />,
-    'first-steps': <FirstSteps />,
-    'forum': <Forum />,
-    'get-product': <GetProduct />,
+export function getStaticPaths() {
+  const languages = ['en', 'es'];
+  const resources = ['blog', 'changelog', 'collaborate', 'docs', 'first-steps', 'forum', 'get-product'];
+  
+  return languages.flatMap((lang) => 
+    resources.map((resource) => ({
+      params: { lang, resource }
+    }))
+  );
 }
 
-const { resource } = Astro.params
+const { resource } = Astro.params;
 ---
 
-{ resource && resourceMap[resource] }
+<MainLayout>
+  {resource === 'blog' && <Blog />}
+  {resource === 'changelog' && <Changelog />}
+  {resource === 'collaborate' && <Collaborate />}
+  {resource === 'docs' && <Documentation />}
+  {resource === 'first-steps' && <FirstSteps />}
+  {resource === 'forum' && <Forum />}
+  {resource === 'get-product' && <GetProduct />}
+</MainLayout>

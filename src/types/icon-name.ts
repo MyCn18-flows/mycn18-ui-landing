@@ -28,6 +28,7 @@ export type SocialIconName =
   | 'code'
   | 'cloud'
   | 'lock'
+  | 'cpu-chip'
   | 'users'
   | 'globe'
   | 'bolt'
@@ -43,6 +44,12 @@ export type SocialIconName =
   | 'zap'
   | 'star'
   | 'heart'
-  | 'chevron-right';
+  | 'chevron-right'
+  |'chevron-left'
+  | 'chevron-up'
+  | 'chevron-down'
+  | 'cpu-chip'
+  | 'wrench'
+  | 'question-mark';
 
 export type IconName = CompanyIconName | SocialIconName | FeatureIconName;

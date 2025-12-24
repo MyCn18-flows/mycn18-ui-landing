@@ -1,9 +1,9 @@
 import type { SiteConfig } from "@/types/site-config";
 
 export const SITE_CONFIG: SiteConfig = {
-    name: 'AI Agent Platform',
-    title: 'AI Agent Platform - Intelligent Automation for Modern Teams',
-    description: 'Transform your business with autonomous AI agents. Automate workflows, integrate seamlessly, and scale effortlessly. Start free today.',
+    name: 'MyCn18',
+    title: 'site.title',
+    description: 'site.description',
     keywords: [
         'AI agents',
         'automation',

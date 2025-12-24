@@ -1,7 +1,11 @@
 {
+    "common": {
+        "previous": "Previous",
+        "next": "Next"
+    },
     "site": {
         "title": "MyCn18 Home",
-        "description": "Powerful Next-Gen Solutions"
+        "description": "Create your flow, with no attachments, at any level"
     },
     "layout": {
         "header": {
@@ -45,6 +49,7 @@
             "tagline": "Building the future of modern engineering.",
             "copyright": "All rights reserved.",
             "columns": {
+                "product": "Products",
                 "company": "Company",
                 "support": "Support",
                 "legal": "Legal"

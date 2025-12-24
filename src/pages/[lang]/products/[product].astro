@@ -1,17 +1,33 @@
 ---
-import CanvaCn18 from "@/components/products/Canvacn18.astro"
-import GuardCn18 from "@/components/products/Guardcn18.astro"
-import MarketplaCn18 from "@/components/products/Marketplacn18.astro"
-import SdkCli from "@/components/products/SdkCli.astro"
+import MainLayout from '@/layouts/MainLayout.astro';
+import CanvaCn18 from "@/components/products/Canvacn18.astro";
+import GuardCn18 from "@/components/products/Guardcn18.astro";
+import MarketplaCn18 from "@/components/products/Marketplacn18.astro";
+import SdkCli from "@/components/products/SdkCli.astro";
 
-const productMap: Record<string, HTMLElement> = {
-    'canvacn18': <CanvaCn18 />,
-    'guardcn18': <GuardCn18 />,
-    'marketplacn18': <MarketplaCn18 />,
-    'sdk-cli': <SdkCli />,
+export function getStaticPaths() {
+  const languages = ['en', 'es'];
+  const products = ['canvacn18', 'guardcn18', 'marketplacn18', 'sdk-cli'];
+  
+  return languages.flatMap((lang) => 
+    products.map((product) => ({
+      params: { lang, product }
+    }))
+  );
 }
 
-const { product } = Astro.params
+const { product } = Astro.params;
+
+const productMap: Record<string, any> = {
+    'canvacn18': CanvaCn18,
+    'guardcn18': GuardCn18,
+    'marketplacn18': MarketplaCn18,
+    'sdk-cli': SdkCli,
+};
+
+const SelectedProduct = product ? productMap[product] : null;
 ---
 
-{ product && productMap[product] }
+<MainLayout>
+  {SelectedProduct ? <SelectedProduct /> : <h1>404 - No encontrado</h1>}
+</MainLayout>

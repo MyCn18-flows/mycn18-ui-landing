@@ -4,5 +4,5 @@ export type FutureNewsConfig = {
   items: {
     title: string;
     description: string;
-  }
+  }[]
 }

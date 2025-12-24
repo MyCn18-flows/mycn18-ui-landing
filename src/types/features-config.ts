@@ -6,6 +6,6 @@ export type FeaturesConfig = {
   items: {
     title: string;
     description: string;
-    icon?: IconName;
+    icon: IconName;
   }[]
 };

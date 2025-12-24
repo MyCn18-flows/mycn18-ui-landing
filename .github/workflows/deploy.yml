@@ -1,0 +1,59 @@
+name: Deploy Astro to GitHub Pages
+
+on:
+  # Se ejecuta cuando haces push a la rama principal (main)
+  push:
+    branches: ["main"]
+  # Permite ejecutar manualmente el workflow desde la pestaña Actions
+  workflow_dispatch:
+
+# Permite que las GitHub Actions escriban en la pestaña de Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Solo permite una ejecución concurrente para evitar conflictos
+concurrency:
+  cancel-in-progress: true
+  group: pages
+
+jobs:
+  # 1. Tarea de Construcción (Build)
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Astro necesita un entorno Node)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm' # Usa caché para acelerar la instalación de dependencias
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Astro Project (Genera los archivos estáticos en la carpeta 'dist')
+        run: npm run build
+
+      - name: Setup Pages (Prepara el entorno para el despliegue)
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact (Sube la carpeta 'dist' a GitHub)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist' # Asegúrate de que esta sea la carpeta de salida de tu build
+
+  # 2. Tarea de Despliegue (Deploy)
+  deploy:
+    environment:
+      name: github
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build # Depende de que la tarea 'build' haya terminado con éxito
+    steps:
+      - name: Deploy to GitHub Pages (Publica los archivos cargados)
+        id: deployment
+        uses: actions/deploy-pages@v4

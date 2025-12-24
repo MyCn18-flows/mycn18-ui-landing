@@ -47,4 +47,10 @@ export const iconMap: Record<IconName, string> = {
   'shield-check': 'heroicons:shield-check',
   'paperplane': 'heroicons:paper-airplane',
   'chevron-right': 'heroicons:chevron-right',
+  'chevron-left': 'heroicons:chevron-left',
+  'chevron-up': 'heroicons:chevron-up',
+  'chevron-down': 'heroicons:chevron-down',
+  'cpu-chip': 'heroicons:cpu-chip',
+  'wrench': 'heroicons:wrench-screwdriver',
+  'question-mark': 'heroicons:question-mark-circle',
 };

@@ -1,6 +1,7 @@
 ---
 import '@/styles/globals.css';
 import { SITE_CONFIG } from '@/config/site';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 type Props = {
     title?: string;
@@ -12,9 +13,12 @@ const canonicalURL = Astro.site
     ? new URL(Astro.url.pathname, Astro.site) 
     : Astro.url;
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 const { 
-    title = SITE_CONFIG.title, 
-    description = SITE_CONFIG.description, 
+    title = t(SITE_CONFIG.title), 
+    description = (SITE_CONFIG.description), 
     image = '/screenshot.jpeg' 
 } = Astro.props;
 ---
