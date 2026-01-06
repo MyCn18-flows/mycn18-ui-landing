@@ -5,27 +5,29 @@ import GuardCn18 from "@/components/products/Guardcn18.astro";
 import MarketplaCn18 from "@/components/products/Marketplacn18.astro";
 import SdkCli from "@/components/products/SdkCli.astro";
 
+const VALID_PRODUCTS = ['canvacn18', 'guardcn18', 'marketplacn18', 'sdk-cli'] as const;
+type ProductToken = typeof VALID_PRODUCTS[number];
+
 export function getStaticPaths() {
   const languages = ['en', 'es'];
-  const products = ['canvacn18', 'guardcn18', 'marketplacn18', 'sdk-cli'];
   
   return languages.flatMap((lang) => 
-    products.map((product) => ({
+    VALID_PRODUCTS.map((product) => ({
       params: { lang, product }
     }))
   );
 }
 
-const { product } = Astro.params;
-
-const productMap: Record<string, any> = {
+const productMap: Record<ProductToken, any> = {
     'canvacn18': CanvaCn18,
     'guardcn18': GuardCn18,
     'marketplacn18': MarketplaCn18,
     'sdk-cli': SdkCli,
 };
 
-const SelectedProduct = product ? productMap[product] : null;
+const { product } = Astro.params;
+
+const SelectedProduct = product ? productMap[product as ProductToken] : null;
 ---
 
 <MainLayout>
