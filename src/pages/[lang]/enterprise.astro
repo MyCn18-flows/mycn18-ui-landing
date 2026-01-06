@@ -1,13 +1,7 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
 import Perks from '@/components/enterprise(beta)/Perks.astro';
-
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'en' } },
-    { params: { lang: 'es' } },
-  ];
-}
+export { getStaticPaths } from '@/i18n/utils';
 ---
 
 <MainLayout>

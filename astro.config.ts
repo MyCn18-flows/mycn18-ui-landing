@@ -1,29 +1,28 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import robotsTxt from 'astro-robots-txt';
 import sitemap from '@astrojs/sitemap';
-import icon from 'astro-icon';
-
+import compress from "astro-compress";
 import react from '@astrojs/react';
+import icon from 'astro-icon';
 
 const REPO_NAME = 'mycn18-ui-landing';
 const isProd = process.env.NODE_ENV === 'production';
 
-
 // https://astro.build/config
 export default defineConfig({
-  integrations: [
-    icon(), 
-    react(), 
-    sitemap({
-      i18n: {
-        defaultLocale: 'en',
-        locales: {
-          en: 'en',
-          es: 'es',
-        },
+  experimental: {
+    chromeDevtoolsWorkspace: true,
+  },
+  integrations: [robotsTxt(), icon(), compress(), react(), sitemap({
+    i18n: {
+      defaultLocale: 'en',
+      locales: {
+        en: 'en',
+        es: 'es',
       },
-    })
-  ],
+    },
+  })],
   
   site: isProd 
     ? `https://luke1606.github.io` 

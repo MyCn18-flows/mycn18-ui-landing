@@ -1,7 +1,9 @@
 ---
-import '@/styles/globals.css';
+import { SEO } from "astro-seo";
+import { Schema } from "astro-seo-schema";
 import { SITE_CONFIG } from '@/config/site';
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import '@/styles/global.css';
 
 type Props = {
     title?: string;
@@ -18,13 +20,19 @@ const {
     image = '/screenshot.jpeg' 
 } = Astro.props;
 
-const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); // "/mycn18-ui-landing"
+// Construcción de URLs
+const siteUrl = Astro.site ? Astro.site.toString() : `http://localhost:${import.meta.env.PORT || 5000}`;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, ''); 
 const cleanImage = image.startsWith('/') ? image : `/${image}`;
+const socialImageURL = new URL(baseUrl + cleanImage, siteUrl).toString();
+const canonicalURL = new URL(Astro.url.pathname, siteUrl).toString();
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url);
-
-const socialImageURL = new URL(baseUrl + cleanImage, Astro.site || 'http://localhost:5000');
-
+// Lógica de hreflang para SEO internacional
+const languages = ['en', 'es'];
+const languageAlternates = languages.map((l) => ({
+    hrefLang: l,
+    href: new URL(`${baseUrl}/${l}${Astro.url.pathname.replace(baseUrl, '').replace(/^\/[a-z]{2}/, '')}`, siteUrl).toString(),
+}));
 ---
 
 <meta charset="utf-8" />
@@ -32,24 +40,43 @@ const socialImageURL = new URL(baseUrl + cleanImage, Astro.site || 'http://local
 <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
 <meta name="generator" content={Astro.generator} />
 
-<link rel="canonical" href={canonicalURL} />
+<SEO
+  title={title}
+  description={description}
+  canonical={canonicalURL}
+  openGraph={{
+    basic: {
+      title: title,
+      type: "website",
+      image: socialImageURL,
+      url: canonicalURL,
+    }
+  }}
+  twitter={{
+    card: "summary_large_image",
+    title: title,
+    description: description,
+    image: socialImageURL,
+  }}
+  languageAlternates={languageAlternates}
+  extend={{
+    meta: [
+      { name: "keywords", content: SITE_CONFIG.keywords.join(', ') },
+    ],
+  }}
+/>
 
-<title>{title}</title>
-<meta name="title" content={title} />
-<meta name="description" content={description} />
-<meta name="keywords" content={SITE_CONFIG.keywords.join(', ')} />
-
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
-<meta property="og:image" content={socialImageURL} />
-
-<meta property="twitter:card" content={SITE_CONFIG.twitterCard} />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={socialImageURL} />
+<Schema
+  item={{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MyCn18",
+    "description": description,
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "url": siteUrl,
+  }}
+/>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -62,22 +89,13 @@ const socialImageURL = new URL(baseUrl + cleanImage, Astro.site || 'http://local
       if (saved) return saved;
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     };
-    
     const theme = getTheme();
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.style.colorScheme = theme;
   })();
 
   document.addEventListener('astro:after-swap', () => {
     const theme = localStorage.getItem('theme') || 'light';
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', theme === 'dark');
   });
 </script>

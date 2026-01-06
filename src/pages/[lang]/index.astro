@@ -3,13 +3,7 @@ import MainLayout from '@/layouts/MainLayout.astro';
 import Hero from '@/components/home/Hero.astro';
 import WhyUseIt from '@/components/home/WhyUseIt.astro';
 import GoSeeIt from '@/components/home/GoSeeIt.astro';
-
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'en' } },
-    { params: { lang: 'es' } },
-  ];
-}
+export { getStaticPaths } from '@/i18n/utils';
 ---
 
 <MainLayout>

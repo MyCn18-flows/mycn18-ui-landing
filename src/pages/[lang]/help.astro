@@ -1,13 +1,7 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
 import HelpOrContact from '@/components/help/HelpOrContact.astro';
-
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'en' } },
-    { params: { lang: 'es' } },
-  ];
-}
+export { getStaticPaths } from '@/i18n/utils';
 ---
 
 <MainLayout>

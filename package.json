@@ -16,12 +16,17 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "astro": "^5.15.1",
+    "astro-compress": "^2.3.8",
     "astro-icon": "^1.1.5",
+    "astro-robots-txt": "^1.0.0",
+    "astro-seo": "^0.8.4",
+    "astro-seo-schema": "^5.1.0",
     "gsap": "^3.14.2",
     "motion": "^12.23.26",
     "ogl": "^1.0.11",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "schema-dts": "^1.1.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.16",
